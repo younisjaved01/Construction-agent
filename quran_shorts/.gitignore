@@ -1,0 +1,13 @@
+# pipeline artifacts
+work/
+output/
+*.mp4
+*.m4a
+*.ass
+__pycache__/
+*.pyc
+
+# fonts you drop in locally (keep the folder, ignore the binaries)
+fonts/*.ttf
+fonts/*.otf
+!fonts/.gitkeep
