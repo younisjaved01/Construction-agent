@@ -109,7 +109,7 @@ curl -O https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/023099.mp3
 ffmpeg -y -i 023099.mp3 -i 023100.mp3 \
   -filter_complex "[0:a][1:a]concat=n=2:v=0:a=1[c];\
 [c]equalizer=f=150:t=q:w=1.2:g=3,equalizer=f=5000:t=q:w=1.5:g=2.5,\
-aecho=0.8:0.9:55|75:0.22:0.16,loudnorm=I=-14:TP=-1.5:LRA=11[a]" \
+aecho=0.8:0.9:55|75:0.22|0.16,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]" \
   -map "[a]" -c:a aac -b:a 192k segment.m4a
 ```
 

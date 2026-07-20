@@ -88,7 +88,7 @@ class Config:
     english: bool = True
     background: str | None = None       # path or URL to a 9:16 loop
     ambient: str | None = None          # path to a low-volume ambient bed (rain/wind/room)
-    dim: float = 0.32                   # dark overlay opacity (0.30–0.40 recommended)
+    dim: float = 0.28                   # dark overlay opacity (0.25–0.40 recommended)
     arabic_font: str = "Amiri"
     english_font: str = "DejaVu Sans"
     fonts_dir: str = "fonts"
@@ -223,8 +223,9 @@ def master_audio(cfg: Config, items: list[dict], out_path: str) -> None:
     chain = (
         "equalizer=f=150:t=q:w=1.2:g=3,"     # gentle bass warmth ~150 Hz
         "equalizer=f=5000:t=q:w=1.5:g=2.5,"  # treble clarity ~5 kHz
-        "aecho=0.8:0.9:55|75:0.22:0.16,"     # subtle ambient room space
-        "loudnorm=I=-14:TP=-1.5:LRA=11"
+        "aecho=0.8:0.9:55|75:0.22|0.16,"     # subtle ambient room space
+        "loudnorm=I=-14:TP=-1.5:LRA=11,"
+        "aresample=48000"                    # standard 48 kHz output
     )
 
     n = len(items)
@@ -303,11 +304,13 @@ def background_input(cfg: Config, duration: float) -> list[str]:
         # Loop a user-supplied royalty-free 9:16 clip to cover the duration.
         return ["-stream_loop", "-1", "-i", cfg.background]
     # Fallback: locally generated cinematic deep-space gradient (animated).
+    # Visible deep-blue/indigo nebula tones so the motion actually reads on
+    # screen while staying dark enough for gold/white captions to pop.
     d = math.ceil(duration) + 1
     src = (
-        f"gradients=s=1080x1920:x0=180:y0=200:x1=920:y1=1720:"
-        f"c0=0x060d1f:c1=0x0e2038:c2=0x14324f:c3=0x02060f:"
-        f"nb_colors=4:seed=7:speed=0.012:duration={d}"
+        f"gradients=s=1080x1920:x0=140:y0=180:x1=940:y1=1760:"
+        f"c0=0x0a1e3f:c1=0x143a6b:c2=0x1d5c8f:c3=0x05101f:"
+        f"nb_colors=4:seed=7:speed=0.010:duration={d}"
     )
     return ["-f", "lavfi", "-i", src]
 
@@ -455,8 +458,8 @@ def parse_args() -> tuple[Config, bool]:
                    help="Path/URL to a royalty-free 9:16 loop. Omit to auto-generate.")
     p.add_argument("--ambient", default=None,
                    help="Path to a low-volume ambient bed (rain/wind/room).")
-    p.add_argument("--dim", type=float, default=0.32,
-                   help="Dark overlay opacity 0.30–0.40 for caption legibility.")
+    p.add_argument("--dim", type=float, default=0.28,
+                   help="Dark overlay opacity 0.25–0.40 for caption legibility.")
     p.add_argument("--arabic-font", default="Amiri")
     p.add_argument("--english-font", default="DejaVu Sans")
     p.add_argument("--fonts-dir", default="fonts")
