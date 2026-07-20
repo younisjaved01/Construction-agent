@@ -266,8 +266,8 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Arabic,{cfg.arabic_font},74,{GOLD},{WHITE},{BLACK},{SHADOW},0,0,0,0,100,100,0,0,1,3,2,5,90,90,0,1
-Style: English,{cfg.english_font},40,{WHITE},{WHITE},{BLACK},{SHADOW},0,0,0,0,100,100,0,0,1,2,2,5,140,140,0,1
+Style: Arabic,{cfg.arabic_font},104,{GOLD},{WHITE},{BLACK},{SHADOW},0,0,0,0,100,100,0,0,1,4,2,5,70,70,0,1
+Style: English,{cfg.english_font},42,{WHITE},{WHITE},{BLACK},{SHADOW},0,0,0,0,100,100,0,0,1,2,2,5,140,140,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -281,13 +281,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         # Arabic: upper-middle, centered, fade in/out.
         lines.append(
             f"Dialogue: 0,{start},{end},Arabic,,0,0,0,,"
-            f"{{\\pos(540,760)\\fad(450,300)}}{ar}"
+            f"{{\\pos(540,820)\\fad(450,300)}}{ar}"
         )
         if cfg.english and v.get("en"):
             en = ass_escape(v["en"])
             lines.append(
                 f"Dialogue: 0,{start},{end},English,,0,0,0,,"
-                f"{{\\pos(540,1170)\\fad(450,300)}}{en}"
+                f"{{\\pos(540,1070)\\fad(450,300)}}{en}"
             )
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
