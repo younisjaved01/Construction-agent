@@ -1,0 +1,65 @@
+{
+  "composition": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "durationInFrames": 2580
+  },
+  "surah": {
+    "name": "Al-Mu'minun",
+    "nameArabic": "المؤمنون",
+    "number": 23,
+    "verseRange": "99 – 100"
+  },
+  "audio": {
+    "recitation": "recitation.mp3",
+    "recitationStartFrame": 210,
+    "ambience": "ambience.mp3",
+    "ambienceDb": -30
+  },
+  "background": {
+    "type": "images",
+    "sources": ["bg/img1.jpg", "bg/img2.jpg", "bg/img3.jpg"],
+    "kenBurnsZoom": 0.12,
+    "crossfadeFrames": 75,
+    "grade": {
+      "warmth": 0.18,
+      "saturation": 1.05,
+      "contrast": 1.06,
+      "brightness": 0.82,
+      "scrim": 0.4,
+      "vignette": 0.68,
+      "bloom": 0.16,
+      "fog": 0.12
+    }
+  },
+  "particles": {
+    "count": 42,
+    "opacity": 0.35
+  },
+  "opening": {
+    "startFrame": 0,
+    "durationInFrames": 230,
+    "bismillah": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    "subtitle": "Qur'an Recitation"
+  },
+  "ending": {
+    "startFrame": 2260,
+    "durationInFrames": 320,
+    "dua": "May Allah guide us all."
+  },
+  "verses": [
+    {
+      "arabic": "حَتَّىٰ إِذَا جَاءَ أَحَدَهُمُ الْمَوْتُ قَالَ رَبِّ ارْجِعُونِ",
+      "translation": "Until, when death comes to one of them, he says, “My Lord, send me back,",
+      "startFrame": 224,
+      "endFrame": 815
+    },
+    {
+      "arabic": "لَعَلِّي أَعْمَلُ صَالِحًا فِيمَا تَرَكْتُ ۚ كَلَّا ۚ إِنَّهَا كَلِمَةٌ هُوَ قَائِلُهَا ۖ وَمِن وَرَائِهِم بَرْزَخٌ إِلَىٰ يَوْمِ يُبْعَثُونَ",
+      "translation": "that I might do righteousness in that which I left behind.” No! It is only a word he is saying; and behind them is a barrier until the Day they are resurrected.",
+      "startFrame": 830,
+      "endFrame": 2245
+    }
+  ]
+}

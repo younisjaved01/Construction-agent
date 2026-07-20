@@ -1,0 +1,12 @@
+node_modules/
+out/
+.remotion/
+
+# generated / personal media (bring your own)
+public/bg/*.jpg
+public/bg/*.jpeg
+public/bg/*.png
+public/*.mp3
+public/*.wav
+public/*.mp4
+!public/.gitkeep
