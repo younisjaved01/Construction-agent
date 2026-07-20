@@ -3,6 +3,7 @@ out/
 .remotion/
 
 # generated / personal media (bring your own)
+public/bg_full/
 public/bg/*.jpg
 public/bg/*.jpeg
 public/bg/*.png
