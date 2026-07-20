@@ -39,8 +39,16 @@ If you can't install Amiri system-wide, drop `Amiri-Regular.ttf` into the
 
 ```bash
 cd quran_shorts
+
+# Verify FFmpeg + Arabic fonts render correctly (offline, no downloads) FIRST:
+python3 make_shorts.py --self-test     # writes output/self_test.mp4
+
 python3 make_shorts.py                 # 3 Shorts from Surah 23, Al-Dosari
 ```
+
+Open `output/self_test.mp4` and confirm the background animates, the overlay
+dims it, and the Arabic renders as connected script (not empty boxes). If the
+Arabic is broken, install an Arabic font or drop `Amiri-Regular.ttf` in `fonts/`.
 
 Outputs land in `output/` as `short_01_*.mp4`, `short_02_*.mp4`, …
 Downloaded ayah audio + intermediate files are cached in `work/`.
@@ -60,8 +68,9 @@ python3 make_shorts.py --starts 99,115,78
 # Arabic only, darker overlay, different reciter folder
 python3 make_shorts.py --no-english --dim 0.38 --reciter Yasser_Ad-Dussary_128kbps
 
-# A different surah (falls back to walking from ayah 1 if not in the curated map)
-python3 make_shorts.py --surah 67 --starts 1
+# A different surah — curated passages exist for 18, 23, 36, 55, 67, 93, 94;
+# any other surah falls back to walking from ayah 1.
+python3 make_shorts.py --surah 67
 ```
 
 Full list: `python3 make_shorts.py --help`.

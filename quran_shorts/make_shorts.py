@@ -59,6 +59,12 @@ CURATED_STARTS = {
         1,    # "Certainly the believers have succeeded..."
         57,   # Those who are fearful of their Lord
     ],
+    67: [1, 3, 13, 19, 30],       # Al-Mulk — dominion, the birds, the water
+    36: [1, 12, 33, 77, 82],      # Ya-Sin — signs, resurrection, "Be, and it is"
+    55: [1, 13, 26, 46, 60],      # Ar-Rahman — "which of your Lord's favours..."
+    93: [1, 3, 5, 9, 11],         # Ad-Duha — comfort after hardship
+    94: [1, 5, 7],                # Ash-Sharh — "with hardship comes ease"
+    18: [1, 10, 23, 45, 103],     # Al-Kahf — the cave, worldly life as a parable
 }
 
 GOLD = "&H0000D7FF"   # ASS is &HAABBGGRR: gold = RGB(255,215,0)
@@ -397,7 +403,44 @@ def make_all(cfg: Config) -> None:
     print(f"\nDone. {produced} Short(s) in ./{cfg.outdir}/")
 
 
-def parse_args() -> Config:
+def self_test(cfg: Config) -> None:
+    """Render a short sample offline (no network / no EveryAyah) to verify that
+    FFmpeg, the background, the dark overlay, and Arabic font shaping all work
+    before committing to any downloads."""
+    require_tools()
+    os.makedirs(cfg.workdir, exist_ok=True)
+    os.makedirs(cfg.outdir, exist_ok=True)
+
+    verses = {
+        1: {"ar": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+            "en": "In the name of Allah, the Entirely Merciful, the Especially Merciful."},
+        2: {"ar": "ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ",
+            "en": "All praise is due to Allah, Lord of the worlds."},
+    }
+    items = [
+        {"ayah": 1, "path": "", "dur": 3.5, "offset": 0.0},
+        {"ayah": 2, "path": "", "dur": 3.5, "offset": 3.5},
+    ]
+    dur = 7.0
+
+    audio = os.path.join(cfg.workdir, "selftest.m4a")
+    run(["ffmpeg", "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+         "-t", f"{dur}", "-c:a", "aac", "-b:a", "192k", audio])
+
+    ass = os.path.join(cfg.workdir, "selftest.ass")
+    build_ass(cfg, verses, items, ass)
+
+    out = os.path.join(cfg.outdir, "self_test.mp4")
+    print("rendering offline self-test ...")
+    render_short(cfg, dur, audio, ass, out)
+    print(f"\nself-test OK -> {out}")
+    print("Open it and confirm: background moves, overlay dims it, and the "
+          "Arabic renders as connected script (not boxes). If the Arabic looks "
+          "broken, install an Arabic font (e.g. Amiri) or drop the .ttf in "
+          f"'{cfg.fonts_dir}/'.")
+
+
+def parse_args() -> tuple[Config, bool]:
     p = argparse.ArgumentParser(description="Build 9:16 Qur'an Shorts.")
     p.add_argument("--surah", type=int, default=23)
     p.add_argument("--reciter", default=DEFAULT_RECITER,
@@ -421,10 +464,12 @@ def parse_args() -> Config:
     p.add_argument("--workdir", default="work")
     p.add_argument("--crf", type=int, default=20)
     p.add_argument("--preset", default="medium")
+    p.add_argument("--self-test", action="store_true",
+                   help="Render a sample offline to verify FFmpeg + fonts, then exit.")
     a = p.parse_args()
 
     starts = [int(x) for x in a.starts.split(",") if x.strip()] if a.starts else []
-    return Config(
+    cfg = Config(
         surah=a.surah, reciter=a.reciter, num_shorts=a.num_shorts,
         min_seconds=a.min_seconds, max_seconds=a.max_seconds,
         english=not a.no_english, background=a.background, ambient=a.ambient,
@@ -432,7 +477,12 @@ def parse_args() -> Config:
         fonts_dir=a.fonts_dir, starts=starts, outdir=a.outdir, workdir=a.workdir,
         crf=a.crf, preset=a.preset,
     )
+    return cfg, a.self_test
 
 
 if __name__ == "__main__":
-    make_all(parse_args())
+    config, do_self_test = parse_args()
+    if do_self_test:
+        self_test(config)
+    else:
+        make_all(config)
