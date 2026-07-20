@@ -11,3 +11,9 @@ __pycache__/
 fonts/*.ttf
 fonts/*.otf
 !fonts/.gitkeep
+
+# personal photos / media used as backgrounds
+assets/photos/
+*.jpg
+*.jpeg
+*.png

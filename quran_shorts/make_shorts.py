@@ -87,6 +87,8 @@ class Config:
     hard_cap: float = 58.0
     english: bool = True
     background: str | None = None       # path or URL to a 9:16 loop
+    images: list[str] = field(default_factory=list)  # stills -> animated Ken Burns bg
+    xfade: float = 1.2                  # crossfade seconds between photos
     ambient: str | None = None          # path to a low-volume ambient bed (rain/wind/room)
     dim: float = 0.28                   # dark overlay opacity (0.25–0.40 recommended)
     arabic_font: str = "Amiri"
@@ -315,6 +317,54 @@ def background_input(cfg: Config, duration: float) -> list[str]:
     return ["-f", "lavfi", "-i", src]
 
 
+def make_photo_background(cfg: Config, duration: float, out_path: str) -> None:
+    """Turn still photos into an animated 1080x1920 background: eased Ken Burns
+    zoom/pan on each + crossfades between them, sized to `duration`. Dimming,
+    vignette and captions are added later in render_short. FFmpeg auto-applies
+    EXIF orientation, so no manual rotation is needed."""
+    imgs = cfg.images
+    n = len(imgs)
+    fps = 30
+    t = cfg.xfade if n > 1 else 0.0
+    d = (duration + (n - 1) * t) / n            # per-photo screen time
+    frames = max(1, int(round(d * fps)))
+    motions = ["center", "down", "right", "up"]  # cycled for variety
+
+    def ken_burns(idx: int, motion: str) -> str:
+        z = "min(zoom+0.0009,1.30)"             # slow zoom in, capped
+        if motion == "down":
+            x, y = "iw/2-(iw/zoom/2)", f"(ih-ih/zoom)*(on/{frames})"
+        elif motion == "up":
+            x, y = "iw/2-(iw/zoom/2)", f"(ih-ih/zoom)*(1-on/{frames})"
+        elif motion == "right":
+            x, y = f"(iw-iw/zoom)*(on/{frames})", "ih/2-(ih/zoom/2)"
+        else:  # center
+            x, y = "iw/2-(iw/zoom/2)", "ih/2-(ih/zoom/2)"
+        # Upscale 2x first so the zoom stays smooth (avoids pixel jitter).
+        return (f"[{idx}:v]scale=2160:3840:force_original_aspect_ratio=increase,"
+                f"crop=2160:3840,zoompan=z='{z}':d={frames}:s=1080x1920:"
+                f"fps={fps}:x='{x}':y='{y}',setpts=PTS-STARTPTS,format=yuv420p[v{idx}]")
+
+    parts = [ken_burns(i, motions[i % len(motions)]) for i in range(n)]
+
+    prev, acc = "v0", d
+    for i in range(1, n):
+        out = f"x{i}"
+        parts.append(f"[{prev}][v{i}]xfade=transition=fade:duration={t}:"
+                     f"offset={acc - t:.3f}[{out}]")
+        prev, acc = out, acc + d - t
+    parts.append(f"[{prev}]format=yuv420p[v]")
+
+    cmd = ["ffmpeg", "-y"]
+    for img in imgs:
+        cmd += ["-i", img]
+    cmd += ["-filter_complex", ";".join(parts), "-map", "[v]",
+            "-t", f"{duration:.3f}", "-r", str(fps),
+            "-c:v", "libx264", "-preset", cfg.preset, "-crf", str(cfg.crf),
+            "-pix_fmt", "yuv420p", out_path]
+    run(cmd)
+
+
 def render_short(cfg: Config, duration: float, audio_path: str,
                  ass_path: str, out_path: str) -> None:
     dur = min(duration, cfg.hard_cap)
@@ -397,6 +447,11 @@ def make_all(cfg: Config) -> None:
         total = min(probe_duration(audio_path), cfg.hard_cap)
         print("  writing subtitles ...")
         build_ass(cfg, verses, items, ass_path)
+        if cfg.images:
+            print("  animating photo background ...")
+            bg_path = os.path.join(cfg.workdir, f"{tag}_bg.mp4")
+            make_photo_background(cfg, total, bg_path)
+            cfg.background = bg_path        # feed it to render_short as the loop
         print("  rendering video ...")
         render_short(cfg, total, audio_path, ass_path, out_path)
         print(f"  -> {out_path}")
@@ -456,6 +511,11 @@ def parse_args() -> tuple[Config, bool]:
     p.add_argument("--no-english", action="store_true", help="Arabic only.")
     p.add_argument("--background", default=None,
                    help="Path/URL to a royalty-free 9:16 loop. Omit to auto-generate.")
+    p.add_argument("--images", default="",
+                   help="Comma-separated still photos -> animated Ken Burns + "
+                        "crossfade background (overrides --background).")
+    p.add_argument("--xfade", type=float, default=1.2,
+                   help="Crossfade seconds between photos.")
     p.add_argument("--ambient", default=None,
                    help="Path to a low-volume ambient bed (rain/wind/room).")
     p.add_argument("--dim", type=float, default=0.28,
@@ -472,10 +532,12 @@ def parse_args() -> tuple[Config, bool]:
     a = p.parse_args()
 
     starts = [int(x) for x in a.starts.split(",") if x.strip()] if a.starts else []
+    images = [x.strip() for x in a.images.split(",") if x.strip()] if a.images else []
     cfg = Config(
         surah=a.surah, reciter=a.reciter, num_shorts=a.num_shorts,
         min_seconds=a.min_seconds, max_seconds=a.max_seconds,
-        english=not a.no_english, background=a.background, ambient=a.ambient,
+        english=not a.no_english, background=a.background,
+        images=images, xfade=a.xfade, ambient=a.ambient,
         dim=a.dim, arabic_font=a.arabic_font, english_font=a.english_font,
         fonts_dir=a.fonts_dir, starts=starts, outdir=a.outdir, workdir=a.workdir,
         crf=a.crf, preset=a.preset,

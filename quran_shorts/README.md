@@ -59,6 +59,9 @@ Downloaded ayah audio + intermediate files are cached in `work/`.
 # Use your own royalty-free 9:16 loop instead of the generated background
 python3 make_shorts.py --background assets/starfield_9x16.mp4
 
+# Use your own photos as an animated background (Ken Burns zoom/pan + crossfades)
+python3 make_shorts.py --images photo1.jpg,photo2.jpg,photo3.jpg
+
 # Layer a subtle ambient bed (rain/wind/room) under the recitation
 python3 make_shorts.py --ambient assets/soft_rain.mp3
 
@@ -145,6 +148,26 @@ ffmpeg -y -ss 00:04:12 -to 00:05:02 -i source.mp3 -c copy segment_raw.mp3
 
 `make_shorts.py` keeps EveryAyah as the default because per-ayah files give
 exact verse boundaries and clean redistribution rights.
+
+## Animated photo backgrounds (`--images`)
+
+Pass your own stills and the pipeline animates them into the background:
+
+- each photo gets a slow, eased **Ken Burns** move (zoom + pan, direction
+  cycled per photo for variety), upscaled 2× first so the motion stays smooth;
+- photos are joined with **crossfades** (`--xfade`, default 1.2 s);
+- they're auto-filled/cropped to 1080×1920, then the usual dark overlay +
+  vignette + captions go on top.
+
+EXIF orientation is applied automatically, so portrait phone photos come out
+upright — no manual rotation needed.
+
+> **"Can I use Framer Motion?"** Framer Motion animates React components in a
+> browser; it can't render an MP4 on its own. The Ken Burns + crossfade motion
+> above is the FFmpeg equivalent and needs no browser. If you specifically want
+> React/Framer-Motion-driven animation baked into video, use
+> [**Remotion**](https://www.remotion.dev/) (it renders React through a headless
+> browser to MP4) and feed its output here via `--background`.
 
 ## Free 9:16 background sources
 
