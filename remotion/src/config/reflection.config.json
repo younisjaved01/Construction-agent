@@ -3,7 +3,7 @@
     "width": 1080,
     "height": 1920,
     "fps": 60,
-    "durationInFrames": 1696
+    "durationInFrames": 2080
   },
   "background": {
     "source": "bg/img1.jpg",
@@ -33,353 +33,353 @@
     "reference": "Ash-Sharh 94:5-6"
   },
   "narration": {
-    "file": null,
+    "file": "narration.mp3",
     "startFrame": 120,
-    "provider": "mock"
+    "provider": "elevenlabs"
   },
   "translation": {
     "text": "For indeed, with hardship comes ease. Indeed, with hardship comes ease.",
     "startFrame": 240,
-    "endFrame": 454,
+    "endFrame": 546,
     "words": [
       {
         "word": "For",
         "startFrame": 240,
-        "endFrame": 250
+        "endFrame": 252
       },
       {
         "word": "indeed,",
-        "startFrame": 253,
-        "endFrame": 272
+        "startFrame": 256,
+        "endFrame": 280
       },
       {
         "word": "with",
-        "startFrame": 276,
-        "endFrame": 288
+        "startFrame": 282,
+        "endFrame": 293
       },
       {
         "word": "hardship",
-        "startFrame": 292,
-        "endFrame": 317
+        "startFrame": 296,
+        "endFrame": 326
       },
       {
         "word": "comes",
-        "startFrame": 320,
-        "endFrame": 336
+        "startFrame": 331,
+        "endFrame": 351
       },
       {
         "word": "ease.",
-        "startFrame": 339,
-        "endFrame": 352
+        "startFrame": 358,
+        "endFrame": 393
       },
       {
         "word": "Indeed,",
-        "startFrame": 355,
-        "endFrame": 374
+        "startFrame": 409,
+        "endFrame": 435
       },
       {
         "word": "with",
-        "startFrame": 378,
-        "endFrame": 390
+        "startFrame": 436,
+        "endFrame": 447
       },
       {
         "word": "hardship",
-        "startFrame": 394,
-        "endFrame": 419
+        "startFrame": 450,
+        "endFrame": 477
       },
       {
         "word": "comes",
-        "startFrame": 422,
-        "endFrame": 438
+        "startFrame": 481,
+        "endFrame": 500
       },
       {
         "word": "ease.",
-        "startFrame": 442,
-        "endFrame": 454
+        "startFrame": 505,
+        "endFrame": 546
       }
     ]
   },
   "reflection": {
     "text": "Whatever weighs on you today was never meant to last. Allah repeats His promise twice, so your heart can hold on: ease is already on its way, hidden inside the very hardship you are facing. Keep going, keep praying, and trust that relief is nearer than it feels.",
-    "startFrame": 514,
-    "endFrame": 1358,
+    "startFrame": 606,
+    "endFrame": 1718,
     "words": [
       {
         "word": "Whatever",
-        "startFrame": 514,
-        "endFrame": 539
+        "startFrame": 606,
+        "endFrame": 643
       },
       {
         "word": "weighs",
-        "startFrame": 543,
-        "endFrame": 561
+        "startFrame": 648,
+        "endFrame": 662
       },
       {
         "word": "on",
-        "startFrame": 565,
-        "endFrame": 575
-      },
-      {
-        "word": "you",
-        "startFrame": 578,
-        "endFrame": 588
-      },
-      {
-        "word": "today",
-        "startFrame": 591,
-        "endFrame": 607
-      },
-      {
-        "word": "was",
-        "startFrame": 611,
-        "endFrame": 620
-      },
-      {
-        "word": "never",
-        "startFrame": 624,
-        "endFrame": 639
-      },
-      {
-        "word": "meant",
-        "startFrame": 643,
-        "endFrame": 659
-      },
-      {
-        "word": "to",
-        "startFrame": 662,
+        "startFrame": 666,
         "endFrame": 672
       },
       {
-        "word": "last.",
+        "word": "you",
         "startFrame": 675,
-        "endFrame": 688
+        "endFrame": 680
+      },
+      {
+        "word": "today",
+        "startFrame": 684,
+        "endFrame": 705
+      },
+      {
+        "word": "was",
+        "startFrame": 710,
+        "endFrame": 718
+      },
+      {
+        "word": "never",
+        "startFrame": 723,
+        "endFrame": 740
+      },
+      {
+        "word": "meant",
+        "startFrame": 744,
+        "endFrame": 757
+      },
+      {
+        "word": "to",
+        "startFrame": 760,
+        "endFrame": 764
+      },
+      {
+        "word": "last.",
+        "startFrame": 769,
+        "endFrame": 806
       },
       {
         "word": "Allah",
-        "startFrame": 691,
-        "endFrame": 707
+        "startFrame": 819,
+        "endFrame": 838
       },
       {
         "word": "repeats",
-        "startFrame": 711,
-        "endFrame": 732
+        "startFrame": 841,
+        "endFrame": 865
       },
       {
         "word": "His",
-        "startFrame": 736,
-        "endFrame": 746
+        "startFrame": 868,
+        "endFrame": 874
       },
       {
         "word": "promise",
-        "startFrame": 749,
-        "endFrame": 771
+        "startFrame": 877,
+        "endFrame": 901
       },
       {
         "word": "twice,",
-        "startFrame": 775,
-        "endFrame": 790
+        "startFrame": 903,
+        "endFrame": 942
       },
       {
         "word": "so",
-        "startFrame": 794,
-        "endFrame": 804
+        "startFrame": 955,
+        "endFrame": 964
       },
       {
         "word": "your",
-        "startFrame": 807,
-        "endFrame": 820
+        "startFrame": 969,
+        "endFrame": 978
       },
       {
         "word": "heart",
-        "startFrame": 823,
-        "endFrame": 839
+        "startFrame": 981,
+        "endFrame": 993
       },
       {
         "word": "can",
-        "startFrame": 842,
-        "endFrame": 852
+        "startFrame": 996,
+        "endFrame": 1004
       },
       {
         "word": "hold",
-        "startFrame": 856,
-        "endFrame": 868
-      },
-      {
-        "word": "on:",
-        "startFrame": 872,
-        "endFrame": 881
-      },
-      {
-        "word": "ease",
-        "startFrame": 885,
-        "endFrame": 897
-      },
-      {
-        "word": "is",
-        "startFrame": 901,
-        "endFrame": 911
-      },
-      {
-        "word": "already",
-        "startFrame": 914,
-        "endFrame": 936
-      },
-      {
-        "word": "on",
-        "startFrame": 940,
-        "endFrame": 949
-      },
-      {
-        "word": "its",
-        "startFrame": 953,
-        "endFrame": 962
-      },
-      {
-        "word": "way,",
-        "startFrame": 966,
-        "endFrame": 976
-      },
-      {
-        "word": "hidden",
-        "startFrame": 979,
-        "endFrame": 998
-      },
-      {
-        "word": "inside",
-        "startFrame": 1002,
+        "startFrame": 1008,
         "endFrame": 1020
       },
       {
-        "word": "the",
-        "startFrame": 1024,
-        "endFrame": 1033
+        "word": "on:",
+        "startFrame": 1025,
+        "endFrame": 1054
       },
       {
-        "word": "very",
-        "startFrame": 1037,
-        "endFrame": 1050
-      },
-      {
-        "word": "hardship",
-        "startFrame": 1053,
-        "endFrame": 1078
-      },
-      {
-        "word": "you",
-        "startFrame": 1082,
-        "endFrame": 1091
-      },
-      {
-        "word": "are",
-        "startFrame": 1095,
-        "endFrame": 1104
-      },
-      {
-        "word": "facing.",
-        "startFrame": 1108,
-        "endFrame": 1127
-      },
-      {
-        "word": "Keep",
-        "startFrame": 1130,
-        "endFrame": 1143
-      },
-      {
-        "word": "going,",
-        "startFrame": 1146,
-        "endFrame": 1162
-      },
-      {
-        "word": "keep",
-        "startFrame": 1166,
-        "endFrame": 1178
-      },
-      {
-        "word": "praying,",
-        "startFrame": 1182,
-        "endFrame": 1204
-      },
-      {
-        "word": "and",
-        "startFrame": 1207,
-        "endFrame": 1217
-      },
-      {
-        "word": "trust",
-        "startFrame": 1220,
-        "endFrame": 1236
-      },
-      {
-        "word": "that",
-        "startFrame": 1240,
-        "endFrame": 1252
-      },
-      {
-        "word": "relief",
-        "startFrame": 1256,
-        "endFrame": 1274
+        "word": "ease",
+        "startFrame": 1073,
+        "endFrame": 1098
       },
       {
         "word": "is",
-        "startFrame": 1278,
-        "endFrame": 1288
+        "startFrame": 1101,
+        "endFrame": 1111
+      },
+      {
+        "word": "already",
+        "startFrame": 1116,
+        "endFrame": 1145
+      },
+      {
+        "word": "on",
+        "startFrame": 1149,
+        "endFrame": 1155
+      },
+      {
+        "word": "its",
+        "startFrame": 1158,
+        "endFrame": 1166
+      },
+      {
+        "word": "way,",
+        "startFrame": 1169,
+        "endFrame": 1197
+      },
+      {
+        "word": "hidden",
+        "startFrame": 1208,
+        "endFrame": 1226
+      },
+      {
+        "word": "inside",
+        "startFrame": 1230,
+        "endFrame": 1259
+      },
+      {
+        "word": "the",
+        "startFrame": 1261,
+        "endFrame": 1265
+      },
+      {
+        "word": "very",
+        "startFrame": 1269,
+        "endFrame": 1283
+      },
+      {
+        "word": "hardship",
+        "startFrame": 1287,
+        "endFrame": 1314
+      },
+      {
+        "word": "you",
+        "startFrame": 1317,
+        "endFrame": 1322
+      },
+      {
+        "word": "are",
+        "startFrame": 1325,
+        "endFrame": 1332
+      },
+      {
+        "word": "facing.",
+        "startFrame": 1334,
+        "endFrame": 1376
+      },
+      {
+        "word": "Keep",
+        "startFrame": 1395,
+        "endFrame": 1408
+      },
+      {
+        "word": "going,",
+        "startFrame": 1412,
+        "endFrame": 1445
+      },
+      {
+        "word": "keep",
+        "startFrame": 1457,
+        "endFrame": 1470
+      },
+      {
+        "word": "praying,",
+        "startFrame": 1472,
+        "endFrame": 1511
+      },
+      {
+        "word": "and",
+        "startFrame": 1524,
+        "endFrame": 1534
+      },
+      {
+        "word": "trust",
+        "startFrame": 1537,
+        "endFrame": 1562
+      },
+      {
+        "word": "that",
+        "startFrame": 1565,
+        "endFrame": 1575
+      },
+      {
+        "word": "relief",
+        "startFrame": 1579,
+        "endFrame": 1603
+      },
+      {
+        "word": "is",
+        "startFrame": 1608,
+        "endFrame": 1617
       },
       {
         "word": "nearer",
-        "startFrame": 1291,
-        "endFrame": 1310
+        "startFrame": 1623,
+        "endFrame": 1644
       },
       {
         "word": "than",
-        "startFrame": 1314,
-        "endFrame": 1326
+        "startFrame": 1649,
+        "endFrame": 1657
       },
       {
         "word": "it",
-        "startFrame": 1330,
-        "endFrame": 1339
+        "startFrame": 1660,
+        "endFrame": 1664
       },
       {
         "word": "feels.",
-        "startFrame": 1343,
-        "endFrame": 1358
+        "startFrame": 1667,
+        "endFrame": 1718
       }
     ]
   },
   "closing": {
     "text": "May Allah guide us all.",
-    "startFrame": 1412,
-    "endFrame": 1486,
+    "startFrame": 1772,
+    "endFrame": 1870,
     "words": [
       {
         "word": "May",
-        "startFrame": 1412,
-        "endFrame": 1422
+        "startFrame": 1772,
+        "endFrame": 1793
       },
       {
         "word": "Allah",
-        "startFrame": 1426,
-        "endFrame": 1441
+        "startFrame": 1796,
+        "endFrame": 1811
       },
       {
         "word": "guide",
-        "startFrame": 1445,
-        "endFrame": 1460
+        "startFrame": 1813,
+        "endFrame": 1829
       },
       {
         "word": "us",
-        "startFrame": 1464,
-        "endFrame": 1474
+        "startFrame": 1830,
+        "endFrame": 1836
       },
       {
         "word": "all.",
-        "startFrame": 1477,
-        "endFrame": 1487
+        "startFrame": 1840,
+        "endFrame": 1870
       }
     ]
   },
   "outro": {
-    "startFrame": 1540,
+    "startFrame": 1924,
     "durationInFrames": 156,
     "lines": [
       "If this reminder benefited you,",
