@@ -101,7 +101,7 @@ async function main() {
   let narrationFile = null;
   const haveAudio = results.every((r) => r.audio);
   if (haveAudio) {
-    narrationFile = assembleAudio(results, gaps);
+    narrationFile = await assembleAudio(results, gaps);
   } else {
     console.log('  (mock) no audio written — captions use estimated timings');
   }
@@ -150,7 +150,15 @@ async function main() {
 }
 
 /** Concatenate [silence, seg, silence, seg, ...] into public/narration.mp3. */
-function assembleAudio(results, gaps) {
+async function assembleAudio(results, gaps) {
+  // Prefer the bundled ffmpeg-static binary; fall back to a system ffmpeg.
+  let ffmpegBin = 'ffmpeg';
+  try {
+    const m = await import('ffmpeg-static');
+    if (m.default) ffmpegBin = m.default;
+  } catch {
+    /* not installed — fall back to system ffmpeg on PATH */
+  }
   const tmp = path.join(ROOT, 'out', 'tts');
   fs.mkdirSync(tmp, {recursive: true});
   const inputs = [];
@@ -178,7 +186,7 @@ function assembleAudio(results, gaps) {
 
   const outFile = 'narration.mp3';
   execFileSync(
-    'ffmpeg',
+    ffmpegBin,
     ['-y', ...inputs, '-filter_complex', filter.join(';'), '-map', '[a]',
      '-c:a', 'libmp3lame', '-q:a', '2', path.join(ROOT, 'public', outFile)],
     {stdio: 'inherit'},
