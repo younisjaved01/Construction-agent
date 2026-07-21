@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "remotion studio",
     "generate": "node scripts/generate.mjs",
+    "make": "node scripts/generate.mjs && remotion render IslamicReflection out/reflection.mp4 --codec=h264 --crf=16 --image-format=jpeg",
     "render": "remotion render IslamicReflection out/reflection.mp4 --codec=h264 --crf=16 --image-format=jpeg",
     "render:quran": "remotion render QuranShort out/video.mp4 --codec=h264 --crf=16 --image-format=jpeg",
     "render:hq": "remotion render IslamicReflection out/reflection.mp4 --codec=h264 --crf=12 --image-format=png",

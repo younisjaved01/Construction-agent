@@ -1,6 +1,8 @@
 node_modules/
 out/
 .remotion/
+.env
+.env.local
 
 # generated / personal media (bring your own)
 public/bg_full/
