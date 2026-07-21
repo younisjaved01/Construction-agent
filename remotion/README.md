@@ -1,5 +1,68 @@
 # Qur'an Cinematic — Remotion
 
+> **Two pipelines live here:**
+> - **`IslamicReflection`** — original, **monetizable** Short: Qur'an Arabic *text*
+>   + your own AI English narration + an original reflection + Captions.ai-style
+>   captions. No third-party recitation, so nothing to Content-ID claim. **← new**
+> - **`QuranShort`** — the earlier recitation-based cinematic Short.
+
+## IslamicReflection — automated, original, monetizable
+
+You provide three things in `scripts/brief.json`:
+
+1. the **verse** (Arabic text + reference),
+2. the **English translation**,
+3. a **background** image/footage path (in `public/`).
+
+Then:
+
+```bash
+# 1) generate narration + word-timed captions  (needs a TTS key for real voice)
+NARRATION_PROVIDER=elevenlabs ELEVENLABS_API_KEY=sk_... npm run generate
+#    ...or run offline with estimated timings and no audio:
+npm run generate
+
+# 2) render the Short
+npm run render          # out/reflection.mp4 (1080x1920, 60fps)
+```
+
+`generate` writes `src/config/reflection.config.json` (all frames + word timings
+derived from the narration), then the composition reads it. The reflection can
+be written by you in the brief, or auto-generated from the verse meaning if you
+set `ANTHROPIC_API_KEY` (faithful, uplifting, < 60 words).
+
+**Narration order** (built automatically): 2 s pause → English translation →
+pause → original reflection → "May Allah guide us all." The recitation is never
+used — the voice is your licensed AI TTS.
+
+**Providers:** `elevenlabs` (recommended — returns word timestamps, so captions
+are exact) and `mock` (offline, no audio) ship today; add OpenAI/Azure by
+implementing the `{ audio, words }` contract in `scripts/lib/tts.mjs`.
+
+### Reflection components
+
+```
+src/reflection/
+  IslamicReflection.tsx     assembles all layers
+  lib/theme.ts              gold/white/charcoal palette + fonts
+  lib/timing.ts             caption chunking / word-state helpers
+  components/
+    BackgroundMotion.tsx    Ken Burns + parallax + grade + rays + fog + vignette
+    ParticleSystem.tsx      floating dust motes
+    VerseDisplay.tsx        Arabic centerpiece (gold, glow, reveal)
+    Translation.tsx         luxury serif English, synced word highlight
+    CaptionAnimation.tsx    Captions.ai-style word-by-word captions (reusable)
+    Reflection.tsx          reflection delivered via CaptionAnimation
+    Narration.tsx           the AI narration audio track
+    Intro.tsx / Outro.tsx   "Today's Quran Reflection" / share call-to-action
+```
+Colours: gold `#D4AF37`, white, dark charcoal, soft warm glow. Captions stay
+inside the Shorts safe area.
+
+---
+
+# Qur'an Cinematic (recitation) — Remotion
+
 A premium, cinematic Qur'an recitation Short built with **Remotion + React +
 TypeScript**. Everything — verses, timing, typography mood, audio, background —
 is driven by a single JSON file, so a new Short is a new config + assets, no

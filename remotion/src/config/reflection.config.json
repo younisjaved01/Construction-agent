@@ -1,0 +1,390 @@
+{
+  "composition": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "durationInFrames": 1696
+  },
+  "background": {
+    "source": "bg/img1.jpg",
+    "kenBurnsZoom": 0.12,
+    "grade": {
+      "warmth": 0.16,
+      "saturation": 1.06,
+      "contrast": 1.08,
+      "brightness": 0.78,
+      "scrim": 0.46,
+      "vignette": 0.72,
+      "bloom": 0.1,
+      "fog": 0.06,
+      "lightRays": 0.06
+    }
+  },
+  "particles": {
+    "count": 46,
+    "opacity": 0.34
+  },
+  "intro": {
+    "durationInFrames": 120,
+    "title": "Today's Quran Reflection"
+  },
+  "verse": {
+    "arabic": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا  إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+    "reference": "Ash-Sharh 94:5-6"
+  },
+  "narration": {
+    "file": null,
+    "startFrame": 120,
+    "provider": "mock"
+  },
+  "translation": {
+    "text": "For indeed, with hardship comes ease. Indeed, with hardship comes ease.",
+    "startFrame": 240,
+    "endFrame": 454,
+    "words": [
+      {
+        "word": "For",
+        "startFrame": 240,
+        "endFrame": 250
+      },
+      {
+        "word": "indeed,",
+        "startFrame": 253,
+        "endFrame": 272
+      },
+      {
+        "word": "with",
+        "startFrame": 276,
+        "endFrame": 288
+      },
+      {
+        "word": "hardship",
+        "startFrame": 292,
+        "endFrame": 317
+      },
+      {
+        "word": "comes",
+        "startFrame": 320,
+        "endFrame": 336
+      },
+      {
+        "word": "ease.",
+        "startFrame": 339,
+        "endFrame": 352
+      },
+      {
+        "word": "Indeed,",
+        "startFrame": 355,
+        "endFrame": 374
+      },
+      {
+        "word": "with",
+        "startFrame": 378,
+        "endFrame": 390
+      },
+      {
+        "word": "hardship",
+        "startFrame": 394,
+        "endFrame": 419
+      },
+      {
+        "word": "comes",
+        "startFrame": 422,
+        "endFrame": 438
+      },
+      {
+        "word": "ease.",
+        "startFrame": 442,
+        "endFrame": 454
+      }
+    ]
+  },
+  "reflection": {
+    "text": "Whatever weighs on you today was never meant to last. Allah repeats His promise twice, so your heart can hold on: ease is already on its way, hidden inside the very hardship you are facing. Keep going, keep praying, and trust that relief is nearer than it feels.",
+    "startFrame": 514,
+    "endFrame": 1358,
+    "words": [
+      {
+        "word": "Whatever",
+        "startFrame": 514,
+        "endFrame": 539
+      },
+      {
+        "word": "weighs",
+        "startFrame": 543,
+        "endFrame": 561
+      },
+      {
+        "word": "on",
+        "startFrame": 565,
+        "endFrame": 575
+      },
+      {
+        "word": "you",
+        "startFrame": 578,
+        "endFrame": 588
+      },
+      {
+        "word": "today",
+        "startFrame": 591,
+        "endFrame": 607
+      },
+      {
+        "word": "was",
+        "startFrame": 611,
+        "endFrame": 620
+      },
+      {
+        "word": "never",
+        "startFrame": 624,
+        "endFrame": 639
+      },
+      {
+        "word": "meant",
+        "startFrame": 643,
+        "endFrame": 659
+      },
+      {
+        "word": "to",
+        "startFrame": 662,
+        "endFrame": 672
+      },
+      {
+        "word": "last.",
+        "startFrame": 675,
+        "endFrame": 688
+      },
+      {
+        "word": "Allah",
+        "startFrame": 691,
+        "endFrame": 707
+      },
+      {
+        "word": "repeats",
+        "startFrame": 711,
+        "endFrame": 732
+      },
+      {
+        "word": "His",
+        "startFrame": 736,
+        "endFrame": 746
+      },
+      {
+        "word": "promise",
+        "startFrame": 749,
+        "endFrame": 771
+      },
+      {
+        "word": "twice,",
+        "startFrame": 775,
+        "endFrame": 790
+      },
+      {
+        "word": "so",
+        "startFrame": 794,
+        "endFrame": 804
+      },
+      {
+        "word": "your",
+        "startFrame": 807,
+        "endFrame": 820
+      },
+      {
+        "word": "heart",
+        "startFrame": 823,
+        "endFrame": 839
+      },
+      {
+        "word": "can",
+        "startFrame": 842,
+        "endFrame": 852
+      },
+      {
+        "word": "hold",
+        "startFrame": 856,
+        "endFrame": 868
+      },
+      {
+        "word": "on:",
+        "startFrame": 872,
+        "endFrame": 881
+      },
+      {
+        "word": "ease",
+        "startFrame": 885,
+        "endFrame": 897
+      },
+      {
+        "word": "is",
+        "startFrame": 901,
+        "endFrame": 911
+      },
+      {
+        "word": "already",
+        "startFrame": 914,
+        "endFrame": 936
+      },
+      {
+        "word": "on",
+        "startFrame": 940,
+        "endFrame": 949
+      },
+      {
+        "word": "its",
+        "startFrame": 953,
+        "endFrame": 962
+      },
+      {
+        "word": "way,",
+        "startFrame": 966,
+        "endFrame": 976
+      },
+      {
+        "word": "hidden",
+        "startFrame": 979,
+        "endFrame": 998
+      },
+      {
+        "word": "inside",
+        "startFrame": 1002,
+        "endFrame": 1020
+      },
+      {
+        "word": "the",
+        "startFrame": 1024,
+        "endFrame": 1033
+      },
+      {
+        "word": "very",
+        "startFrame": 1037,
+        "endFrame": 1050
+      },
+      {
+        "word": "hardship",
+        "startFrame": 1053,
+        "endFrame": 1078
+      },
+      {
+        "word": "you",
+        "startFrame": 1082,
+        "endFrame": 1091
+      },
+      {
+        "word": "are",
+        "startFrame": 1095,
+        "endFrame": 1104
+      },
+      {
+        "word": "facing.",
+        "startFrame": 1108,
+        "endFrame": 1127
+      },
+      {
+        "word": "Keep",
+        "startFrame": 1130,
+        "endFrame": 1143
+      },
+      {
+        "word": "going,",
+        "startFrame": 1146,
+        "endFrame": 1162
+      },
+      {
+        "word": "keep",
+        "startFrame": 1166,
+        "endFrame": 1178
+      },
+      {
+        "word": "praying,",
+        "startFrame": 1182,
+        "endFrame": 1204
+      },
+      {
+        "word": "and",
+        "startFrame": 1207,
+        "endFrame": 1217
+      },
+      {
+        "word": "trust",
+        "startFrame": 1220,
+        "endFrame": 1236
+      },
+      {
+        "word": "that",
+        "startFrame": 1240,
+        "endFrame": 1252
+      },
+      {
+        "word": "relief",
+        "startFrame": 1256,
+        "endFrame": 1274
+      },
+      {
+        "word": "is",
+        "startFrame": 1278,
+        "endFrame": 1288
+      },
+      {
+        "word": "nearer",
+        "startFrame": 1291,
+        "endFrame": 1310
+      },
+      {
+        "word": "than",
+        "startFrame": 1314,
+        "endFrame": 1326
+      },
+      {
+        "word": "it",
+        "startFrame": 1330,
+        "endFrame": 1339
+      },
+      {
+        "word": "feels.",
+        "startFrame": 1343,
+        "endFrame": 1358
+      }
+    ]
+  },
+  "closing": {
+    "text": "May Allah guide us all.",
+    "startFrame": 1412,
+    "endFrame": 1486,
+    "words": [
+      {
+        "word": "May",
+        "startFrame": 1412,
+        "endFrame": 1422
+      },
+      {
+        "word": "Allah",
+        "startFrame": 1426,
+        "endFrame": 1441
+      },
+      {
+        "word": "guide",
+        "startFrame": 1445,
+        "endFrame": 1460
+      },
+      {
+        "word": "us",
+        "startFrame": 1464,
+        "endFrame": 1474
+      },
+      {
+        "word": "all.",
+        "startFrame": 1477,
+        "endFrame": 1487
+      }
+    ]
+  },
+  "outro": {
+    "startFrame": 1540,
+    "durationInFrames": 156,
+    "lines": [
+      "If this reminder benefited you,",
+      "share it with someone you love.",
+      "May Allah reward you."
+    ]
+  }
+}
