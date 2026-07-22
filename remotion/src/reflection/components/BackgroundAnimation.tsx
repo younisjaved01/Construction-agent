@@ -42,6 +42,7 @@ export const BackgroundAnimation: React.FC<{
             height: '100%',
             objectFit: 'cover',
             transform: `scale(${scale}) translate(${driftX}px, ${driftY}px)`,
+            filter: gradeFilter,
             willChange: 'transform',
           }}
         />
@@ -54,8 +55,6 @@ export const BackgroundAnimation: React.FC<{
           pointerEvents: 'none',
         }}
       />
-
-      <AbsoluteFill style={{filter: gradeFilter, mixBlendMode: 'multiply', pointerEvents: 'none'}} />
 
       {/* warm morning wash */}
       <AbsoluteFill
