@@ -3,14 +3,14 @@ import {AbsoluteFill} from 'remotion';
 import rawConfig from '../config/reflection.config.json';
 import {ReflectionConfig} from '../config/reflection.types';
 import './lib/theme';
-import {BackgroundMotion} from './components/BackgroundMotion';
+import {BackgroundAnimation} from './components/BackgroundAnimation';
 import {ParticleSystem} from './components/ParticleSystem';
 import {VerseDisplay} from './components/VerseDisplay';
 import {Translation} from './components/Translation';
 import {Reflection} from './components/Reflection';
 import {CaptionAnimation} from './components/CaptionAnimation';
 import {Narration} from './components/Narration';
-import {Intro} from './components/Intro';
+import {Bismillah} from './components/Bismillah';
 import {Outro} from './components/Outro';
 
 const cfg = rawConfig as unknown as ReflectionConfig;
@@ -26,7 +26,7 @@ export const IslamicReflection: React.FC = () => {
 
   return (
     <AbsoluteFill style={{backgroundColor: '#0b0c0f'}}>
-      <BackgroundMotion
+      <BackgroundAnimation
         source={cfg.background.source}
         zoom={cfg.background.kenBurnsZoom}
         grade={cfg.background.grade}
@@ -51,7 +51,7 @@ export const IslamicReflection: React.FC = () => {
         maxWords={5}
       />
 
-      <Intro durationInFrames={cfg.intro.durationInFrames} title={cfg.intro.title} />
+      <Bismillah durationInFrames={cfg.intro.durationInFrames} />
       <Outro
         startFrame={cfg.outro.startFrame}
         durationInFrames={cfg.outro.durationInFrames}

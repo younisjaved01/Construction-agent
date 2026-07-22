@@ -20,7 +20,7 @@ const FPS = 60;
 const f = (sec) => Math.round(sec * FPS);
 
 // ---- timeline constants (seconds) ----
-const INTRO = 2.0;
+const INTRO = 3.0;
 const PREROLL = 2.0; // "pause for 2 seconds" before the translation
 const GAP_AFTER_TRANSLATION = 1.0;
 const GAP_AFTER_REFLECTION = 0.9;
@@ -135,9 +135,9 @@ async function main() {
       startFrame: outroStart,
       durationInFrames: f(OUTRO),
       lines: [
+        'May Allah reward you for listening.',
         'If this reminder benefited you,',
         'share it with someone you love.',
-        'May Allah reward you.',
       ],
     },
   };
