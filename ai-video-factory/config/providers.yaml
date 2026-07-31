@@ -1,0 +1,101 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PROVIDER REGISTRY  —  the single source of truth for every AI model.
+#
+# Adding / swapping a vendor is a change HERE, never in code. Each entry declares
+# what a model can do, how good it is, and what it costs, so the Cost Router can
+# always pick the cheapest provider that still meets the requested quality tier.
+#
+# quality tiers (ascending): draft < standard < premium < hero
+#   - `quality` = the HIGHEST tier this provider reliably satisfies.
+#   - A request for `draft` can be served by any provider (cheapest wins).
+#   - A request for `premium` only considers providers with quality >= premium.
+#
+# cost_per_unit = USD per generated unit (image / second-of-video / 1k-chars).
+#   Local/self-hosted models use ~0 → the router prefers them automatically.
+# ─────────────────────────────────────────────────────────────────────────────
+
+providers:
+  # ── IMAGE ──────────────────────────────────────────────────────────────────
+  - id: mock-image
+    modality: image
+    adapter: mock            # offline placeholder — used for tests & dry runs
+    model: mock
+    quality: hero
+    cost_per_unit: 0
+    unit: image
+    enabled: true
+
+  - id: fal-flux-schnell
+    modality: image
+    adapter: fal             # pay-per-use API (fal.ai) — cheap, fast keyframes
+    model: fal-ai/flux/schnell
+    quality: draft
+    cost_per_unit: 0.003
+    unit: image
+    enabled: false           # enable once FAL_KEY is set
+    params: { image_size: portrait_16_9, num_inference_steps: 4 }
+
+  - id: fal-flux-dev
+    modality: image
+    adapter: fal
+    model: fal-ai/flux/dev
+    quality: standard
+    cost_per_unit: 0.025
+    unit: image
+    enabled: false
+
+  - id: fal-nano-banana
+    modality: image
+    adapter: fal
+    model: fal-ai/nano-banana
+    quality: premium
+    cost_per_unit: 0.039
+    unit: image
+    enabled: false
+
+  - id: local-comfy-sdxl
+    modality: image
+    adapter: comfy           # self-hosted ComfyUI on your GPU — ~free at scale
+    model: sdxl
+    quality: standard
+    cost_per_unit: 0.0
+    unit: image
+    enabled: false           # flip on when a GPU is available (Milestone: scale)
+
+  # ── VIDEO (wired here now so Milestone 3 is a config flip, not new plumbing) ──
+  - id: fal-seedance-mini
+    modality: video
+    adapter: fal
+    model: fal-ai/bytedance/seedance/v1/mini/image-to-video
+    quality: standard
+    cost_per_unit: 0.18       # per generated clip
+    unit: clip
+    enabled: false
+
+  - id: fal-kling-v2
+    modality: video
+    adapter: fal
+    model: fal-ai/kling-video/v2/standard/image-to-video
+    quality: premium
+    cost_per_unit: 0.35
+    unit: clip
+    enabled: false
+
+  # ── VOICE ────────────────────────────────────────────────────────────────────
+  - id: elevenlabs
+    modality: voice
+    adapter: elevenlabs
+    model: eleven_multilingual_v2
+    quality: premium
+    cost_per_unit: 0.00003    # ~ per character
+    unit: char
+    enabled: false
+
+  - id: local-vibevoice
+    modality: voice
+    adapter: vibevoice        # self-hosted TTS — ~free
+    model: vibevoice
+    quality: standard
+    cost_per_unit: 0.0
+    unit: char
+    enabled: false

@@ -1,0 +1,109 @@
+// Core data model. Everything the pipeline produces is tracked so we can cache,
+// reuse, resume, and later attach analytics. Media bytes live in the asset store;
+// the DB holds metadata + content hashes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// A single video project (one story → one finished video).
+model Project {
+  id        String   @id @default(cuid())
+  title     String
+  status    String   @default("draft") // draft | generating | editing | ready | posted
+  niche     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  scenes     Scene[]
+  jobs       Job[]
+  posts      Post[]
+}
+
+// A reusable character with a locked visual identity (never regenerate needlessly).
+model Character {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  description   String
+  // Content hash of the locked reference image(s) → dedupe + consistency.
+  referenceHash String?
+  refAssetId    String?
+  reference     Asset?   @relation(fields: [refAssetId], references: [id])
+  createdAt     DateTime @default(now())
+
+  scenes Scene[]
+}
+
+// One beat of the story → one keyframe image → one animated shot.
+model Scene {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  index       Int
+  script      String   // narration / dialogue for this scene
+  imagePrompt String?
+  motionPrompt String?
+  characterId String?
+  character   Character? @relation(fields: [characterId], references: [id])
+
+  keyframeId String?
+  keyframe   Asset?  @relation("SceneKeyframe", fields: [keyframeId], references: [id])
+  clipId     String?
+  clip       Asset?  @relation("SceneClip", fields: [clipId], references: [id])
+
+  @@unique([projectId, index])
+}
+
+// A content-addressed asset in the store. `hash` guarantees we never store or
+// pay to generate the same thing twice.
+model Asset {
+  id          String   @id @default(cuid())
+  hash        String   @unique // sha256(modality + model + prompt + params)
+  modality    String            // image | video | voice | music
+  uri         String            // local://… or s3://bucket/key
+  contentType String
+  bytes       Int
+  providerId  String?           // which provider produced it
+  costUsd     Float    @default(0)
+  createdAt   DateTime @default(now())
+
+  sceneKeyframes Scene[]     @relation("SceneKeyframe")
+  sceneClips     Scene[]     @relation("SceneClip")
+  characters     Character[]
+}
+
+// Every generation/render request → a queued, resumable job.
+model Job {
+  id         String   @id @default(cuid())
+  projectId  String?
+  project    Project? @relation(fields: [projectId], references: [id])
+  modality   String
+  tier       String   // requested quality tier
+  providerId String?  // provider the router selected
+  status     String   @default("queued") // queued | running | done | failed | cached
+  cacheHit   Boolean  @default(false)
+  costUsd    Float    @default(0)
+  error      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Distribution record for auto-posting + analytics (later milestones).
+model Post {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+  platform   String   // youtube | tiktok | instagram
+  externalId String?
+  title      String?
+  status     String   @default("scheduled")
+  views      Int      @default(0)
+  ctr        Float?
+  retention  Float?
+  createdAt  DateTime @default(now())
+}
