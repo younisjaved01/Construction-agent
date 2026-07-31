@@ -119,6 +119,15 @@ providers:
     enabled: false
 
   # ── VOICE ────────────────────────────────────────────────────────────────────
+  - id: mock-voice
+    modality: voice
+    adapter: mock            # offline placeholder narration
+    model: mock
+    quality: hero
+    cost_per_unit: 0
+    unit: char
+    enabled: true
+
   - id: elevenlabs
     modality: voice
     adapter: elevenlabs

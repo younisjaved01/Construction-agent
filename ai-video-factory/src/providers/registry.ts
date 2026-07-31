@@ -26,7 +26,8 @@ const ADAPTER_LOADERS: Record<string, () => Promise<AdapterModule>> = {
   mock: () => import('./adapters/mock.js'),
   fal: () => import('./adapters/fal.js'),
   anthropic: () => import('./adapters/anthropic.js'),
-  // comfy, elevenlabs, vibevoice … land in later milestones
+  elevenlabs: () => import('./adapters/elevenlabs.js'),
+  // comfy, vibevoice, minimax … land in later milestones
 };
 
 /** Holds the provider catalog and instantiates adapters on demand. */

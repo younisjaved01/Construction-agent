@@ -87,6 +87,12 @@ async function cmdProduce(topic: string, rest: string[]): Promise<void> {
       imageProvider: flag(rest, 'image-provider'),
       videoProvider: flag(rest, 'video-provider'),
       makeVideo: rest.includes('--video'),
+      makeVoice: rest.includes('--voice'),
+      voiceName: flag(rest, 'voice-name'),
+      voiceId: flag(rest, 'voice-id'),
+      makeMusic: rest.includes('--music'),
+      mood: flag(rest, 'mood'),
+      sfxTag: flag(rest, 'sfx'),
       budgetUsd: flag(rest, 'budget') ? Number(flag(rest, 'budget')) : undefined,
     },
     buildDeps(rest),
@@ -94,8 +100,15 @@ async function cmdProduce(topic: string, rest: string[]): Promise<void> {
 
   console.log(`\n🎬 ${result.title}   [${result.niche}]${result.character ? `  · character: ${result.character}` : ''}`);
   for (const s of result.scenes) {
-    console.log(`  Scene ${s.index}: keyframe ${s.keyframe.uri.split('/').pop()}` + (s.clip ? `  + clip ${s.clip.uri.split('/').pop()}` : '') + `  ($${s.costUsd.toFixed(4)})`);
+    console.log(
+      `  Scene ${s.index}: keyframe ${s.keyframe.uri.split('/').pop()}` +
+        (s.clip ? ` + clip ${s.clip.uri.split('/').pop()}` : '') +
+        (s.voice ? ` + voice ${s.voice.uri.split('/').pop()}` : '') +
+        `  ($${s.costUsd.toFixed(4)})`,
+    );
   }
+  if (result.music) console.log(`  music : ${result.music.title} (${result.music.mood}) → ${result.music.uri}`);
+  if (result.sfx) console.log(`  sfx   : ${result.sfx.title} → ${result.sfx.uri}`);
   console.log(`\n  total cost : $${result.totalCostUsd.toFixed(4)}`);
   console.log(`  manifest   : ${result.manifestPath}\n`);
 }

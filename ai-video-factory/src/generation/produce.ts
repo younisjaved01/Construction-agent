@@ -6,6 +6,8 @@ import {estimate, generate, type PipelineDeps} from '../pipeline/generate.js';
 import {generateStory} from '../content/story.js';
 import {buildScenePrompts} from '../content/prompts.js';
 import {CharacterManager, createCharacterRepo, type Character} from '../content/characters.js';
+import {VoiceManager, narrate} from '../audio/voice.js';
+import {MusicLibrary} from '../audio/music.js';
 import {BudgetGuard} from './budget.js';
 
 export interface SceneOutput {
@@ -15,6 +17,7 @@ export interface SceneOutput {
   motionPrompt: string;
   keyframe: AssetRef;
   clip?: AssetRef;
+  voice?: AssetRef;
   costUsd: number;
 }
 
@@ -23,6 +26,8 @@ export interface ProduceResult {
   niche: string;
   character?: string;
   scenes: SceneOutput[];
+  music?: {title: string; uri: string; mood: string};
+  sfx?: {title: string; uri: string};
   totalCostUsd: number;
   manifestPath: string;
 }
@@ -37,6 +42,15 @@ export interface ProduceOptions {
   imageProvider?: string;
   videoProvider?: string;
   makeVideo?: boolean;
+  // audio (Milestone 4)
+  makeVoice?: boolean;
+  voiceName?: string;
+  voiceId?: string;
+  voiceProvider?: string;
+  voiceTier?: QualityTier;
+  makeMusic?: boolean;
+  mood?: string;
+  sfxTag?: string;
   budgetUsd?: number;
 }
 
@@ -56,6 +70,18 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
   const imgAdapter = await deps.router.select('image', imageTier, {providerId: opts.imageProvider});
   const vidAdapter = opts.makeVideo
     ? await deps.router.select('video', videoTier, {providerId: opts.videoProvider})
+    : undefined;
+  const voiceTier = opts.voiceTier ?? 'standard';
+  const voiceAdapter = opts.makeVoice
+    ? await deps.router.select('voice', voiceTier, {providerId: opts.voiceProvider})
+    : undefined;
+
+  // reusable voice identity — resolved once, reused for every scene (never re-cloned)
+  const voiceProfile = voiceAdapter
+    ? await new VoiceManager().getOrCreate(opts.voiceName ?? 'default', {
+        providerId: voiceAdapter.id,
+        voiceId: opts.voiceId ?? 'default',
+      })
     : undefined;
 
   // 2) character: reuse or create once, then lock a reference keyframe
@@ -121,6 +147,23 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
       clipCost = vid.costUsd;
     }
 
+    let voice: AssetRef | undefined;
+    let voiceCost = 0;
+    if (voiceProfile) {
+      const voiceReq = {
+        modality: 'voice' as const,
+        prompt: p.script,
+        tier: voiceTier,
+        providerId: voiceProfile.providerId,
+        params: {voiceId: voiceProfile.voiceId},
+      };
+      guard.check((await estimate(voiceReq, deps)).costUsd);
+      const nar = await narrate(p.script, voiceProfile, deps, voiceTier);
+      guard.record(nar.costUsd);
+      voice = nar.asset;
+      voiceCost = nar.costUsd;
+    }
+
     scenes.push({
       index: p.index,
       script: p.script,
@@ -128,8 +171,23 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
       motionPrompt: p.motionPrompt,
       keyframe: img.asset,
       clip,
-      costUsd: img.costUsd + clipCost,
+      voice,
+      costUsd: img.costUsd + clipCost + voiceCost,
     });
+  }
+
+  // music + ambient SFX (free library selection by mood)
+  let music: ProduceResult['music'];
+  let sfx: ProduceResult['sfx'];
+  if (opts.makeMusic) {
+    const lib = MusicLibrary.fromFile();
+    const mood = opts.mood ?? story.niche;
+    const track = lib.selectMusic(mood);
+    if (track) music = {title: track.title, uri: track.uri, mood};
+    if (opts.sfxTag) {
+      const s = lib.selectSfx(opts.sfxTag);
+      if (s) sfx = {title: s.title, uri: s.uri};
+    }
   }
 
   // 5) persist a manifest the editor (M5) will consume
@@ -142,6 +200,8 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
     niche: story.niche,
     character: character?.name,
     scenes,
+    music,
+    sfx,
     totalCostUsd: guard.spent,
     manifestPath,
   };

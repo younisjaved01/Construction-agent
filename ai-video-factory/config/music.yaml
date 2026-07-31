@@ -1,0 +1,34 @@
+# Local, royalty-free audio library — mood-tagged. Selecting a track is FREE
+# (no generation), which is how the factory scores hundreds of videos for $0.
+# Drop your own .mp3s in assets/music + assets/sfx and tag them here.
+#
+# Add a generative fallback later by enabling a `music` provider in providers.yaml;
+# the selector will use the library first and only generate if nothing matches.
+
+music:
+  - id: calm-morning
+    title: Gentle Morning
+    mood: [calm, reflective, spiritual, peaceful]
+    uri: assets/music/gentle-morning.mp3
+  - id: uplift-1
+    title: Rising Light
+    mood: [uplifting, motivational, hopeful]
+    uri: assets/music/rising-light.mp3
+  - id: cinematic-1
+    title: Wide Horizon
+    mood: [cinematic, epic, dramatic]
+    uri: assets/music/wide-horizon.mp3
+  - id: neutral-1
+    title: Soft Focus
+    mood: [neutral, general, ambient]
+    uri: assets/music/soft-focus.mp3
+
+sfx:
+  - id: amb-nature
+    title: Forest Ambience
+    tags: [nature, forest, outdoor, birds]
+    uri: assets/sfx/forest-ambience.mp3
+  - id: amb-room
+    title: Quiet Room
+    tags: [indoor, room, cozy]
+    uri: assets/sfx/quiet-room.mp3
