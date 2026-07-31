@@ -11,6 +11,20 @@ export interface PipelineDeps {
   store: AssetStore;
 }
 
+/** Route a request and return the worst-case (no-cache) cost — used by the
+ *  BudgetGuard to refuse a job BEFORE any money is spent. */
+export async function estimate(
+  req: GenerationRequest,
+  deps: PipelineDeps,
+): Promise<{providerId: string; costUsd: number}> {
+  const adapter = await deps.router.select(req.modality, req.tier, {providerId: req.providerId});
+  const params = {...adapter.config.params, ...req.params};
+  return {
+    providerId: adapter.id,
+    costUsd: adapter.estimateCost({prompt: req.prompt, params, references: req.references}),
+  };
+}
+
 /**
  * The one function every modality flows through:
  *   route → content-address → cache-check → generate → store.

@@ -17,7 +17,12 @@ class MockAdapter implements ProviderAdapter {
 
   async generate(input: GenerateInput): Promise<GeneratedBytes> {
     if (this.config.modality === 'text') return this.mockStory(input);
-    return this.mockImage(input);
+    if (this.config.modality === 'image') return this.mockImage(input);
+    // video / voice / music placeholder — bytes flow through the pipeline so
+    // caching, budgeting and manifests all work offline (not a playable file).
+    const label = `MOCK ${this.config.modality} · ${this.config.model} · ${input.prompt.slice(0, 40)}`;
+    const contentType = this.config.modality === 'video' ? 'video/mp4' : 'audio/mpeg';
+    return {bytes: new TextEncoder().encode(label), contentType};
   }
 
   /** A valid multi-scene story JSON derived from the topic (see content/story.ts). */

@@ -7,6 +7,7 @@ import {generate, type PipelineDeps} from './pipeline/generate.js';
 import {generateStory} from './content/story.js';
 import {buildScenePrompts} from './content/prompts.js';
 import {CharacterManager, createCharacterRepo} from './content/characters.js';
+import {produce} from './generation/produce.js';
 
 const MODALITIES: Modality[] = ['text', 'image', 'video', 'voice', 'music'];
 
@@ -71,6 +72,34 @@ async function cmdStory(topic: string, rest: string[]): Promise<void> {
   console.log('');
 }
 
+async function cmdProduce(topic: string, rest: string[]): Promise<void> {
+  const characterName = flag(rest, 'character');
+  const result = await produce(
+    {
+      topic,
+      niche: flag(rest, 'niche'),
+      sceneCount: flag(rest, 'scenes') ? Number(flag(rest, 'scenes')) : undefined,
+      character: characterName
+        ? {name: characterName, description: flag(rest, 'character-desc') ?? characterName, style: flag(rest, 'style')}
+        : undefined,
+      imageTier: flag(rest, 'image-tier') as QualityTier | undefined,
+      videoTier: flag(rest, 'video-tier') as QualityTier | undefined,
+      imageProvider: flag(rest, 'image-provider'),
+      videoProvider: flag(rest, 'video-provider'),
+      makeVideo: rest.includes('--video'),
+      budgetUsd: flag(rest, 'budget') ? Number(flag(rest, 'budget')) : undefined,
+    },
+    buildDeps(rest),
+  );
+
+  console.log(`\n🎬 ${result.title}   [${result.niche}]${result.character ? `  · character: ${result.character}` : ''}`);
+  for (const s of result.scenes) {
+    console.log(`  Scene ${s.index}: keyframe ${s.keyframe.uri.split('/').pop()}` + (s.clip ? `  + clip ${s.clip.uri.split('/').pop()}` : '') + `  ($${s.costUsd.toFixed(4)})`);
+  }
+  console.log(`\n  total cost : $${result.totalCostUsd.toFixed(4)}`);
+  console.log(`  manifest   : ${result.manifestPath}\n`);
+}
+
 async function cmdCharacter(rest: string[]): Promise<void> {
   const mgr = new CharacterManager(createCharacterRepo());
   const [action, name, description] = rest;
@@ -96,12 +125,18 @@ async function main(argv: string[]): Promise<void> {
     if (!arg) throw new Error('A topic is required.');
     return cmdStory(arg, rest);
   }
+  if (cmd === 'produce') {
+    if (!arg) throw new Error('A topic is required.');
+    return cmdProduce(arg, rest);
+  }
   if (cmd === 'character') return cmdCharacter([arg, ...rest].filter(Boolean) as string[]);
 
   console.error(
     'Usage:\n' +
       '  factory <text|image|video|voice|music> "<prompt>" [--tier T] [--provider ID]\n' +
-      '  factory story "<topic>" [--scenes N] [--niche X] [--tier T] [--character NAME] [--image-model M] [--video-model M]\n' +
+      '  factory story "<topic>" [--scenes N] [--niche X] [--character NAME]\n' +
+      '  factory produce "<topic>" [--scenes N] [--character NAME] [--character-desc "…"]\n' +
+      '                  [--image-tier T] [--video-tier T] [--video] [--budget USD]\n' +
       '  factory character add "<name>" "<description>" [--style S]\n' +
       '  factory character list',
   );

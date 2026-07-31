@@ -91,6 +91,15 @@ providers:
     enabled: false           # flip on when a GPU is available (Milestone: scale)
 
   # ── VIDEO (wired here now so Milestone 3 is a config flip, not new plumbing) ──
+  - id: mock-video
+    modality: video
+    adapter: mock            # offline placeholder clip
+    model: mock
+    quality: hero
+    cost_per_unit: 0
+    unit: clip
+    enabled: true
+
   - id: fal-seedance-mini
     modality: video
     adapter: fal
