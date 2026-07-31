@@ -6,7 +6,7 @@ import type {AdapterModule, ProviderAdapter, ProviderConfig} from './types.js';
 
 const ProviderSchema = z.object({
   id: z.string().min(1),
-  modality: z.enum(['image', 'video', 'voice', 'music']),
+  modality: z.enum(['text', 'image', 'video', 'voice', 'music']),
   adapter: z.string().min(1),
   model: z.string().min(1),
   quality: z.enum(QUALITY_TIERS),
@@ -25,6 +25,7 @@ const FileSchema = z.object({providers: z.array(ProviderSchema)});
 const ADAPTER_LOADERS: Record<string, () => Promise<AdapterModule>> = {
   mock: () => import('./adapters/mock.js'),
   fal: () => import('./adapters/fal.js'),
+  anthropic: () => import('./adapters/anthropic.js'),
   // comfy, elevenlabs, vibevoice … land in later milestones
 };
 

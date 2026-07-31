@@ -1,6 +1,6 @@
 // Domain vocabulary shared across the whole factory.
 
-export type Modality = 'image' | 'video' | 'voice' | 'music';
+export type Modality = 'text' | 'image' | 'video' | 'voice' | 'music';
 
 /** Quality tiers, ascending. The router treats a provider's `quality` as the
  *  highest tier it satisfies, and picks the cheapest that meets the request. */

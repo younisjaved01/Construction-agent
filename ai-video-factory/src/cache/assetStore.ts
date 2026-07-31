@@ -11,9 +11,13 @@ export interface AssetStore {
   has(hash: string): Promise<boolean>;
   get(hash: string): Promise<AssetRef | null>;
   put(hash: string, bytes: Uint8Array, contentType: string): Promise<AssetRef>;
+  /** Read the raw bytes back (used to decode cached text/LLM outputs). */
+  readBytes(hash: string): Promise<Uint8Array | null>;
 }
 
 const EXT: Record<string, string> = {
+  'text/plain': 'txt',
+  'application/json': 'json',
   'image/svg+xml': 'svg',
   'image/png': 'png',
   'image/jpeg': 'jpg',
@@ -43,6 +47,17 @@ class LocalAssetStore implements AssetStore {
   async get(hash: string): Promise<AssetRef | null> {
     try {
       return JSON.parse(await readFile(this.meta(hash), 'utf8')) as AssetRef;
+    } catch {
+      return null;
+    }
+  }
+
+  async readBytes(hash: string): Promise<Uint8Array | null> {
+    const ref = await this.get(hash);
+    if (!ref) return null;
+    const path = ref.uri.replace(/^local:\/\//, '');
+    try {
+      return new Uint8Array(await readFile(path));
     } catch {
       return null;
     }

@@ -15,6 +15,34 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 providers:
+  # ── TEXT / LLM (story + prompt reasoning) ────────────────────────────────────
+  - id: mock-text
+    modality: text
+    adapter: mock            # offline canned story — runs with zero infra
+    model: mock
+    quality: hero
+    cost_per_unit: 0
+    unit: call
+    enabled: true
+
+  - id: anthropic-haiku
+    modality: text
+    adapter: anthropic
+    model: claude-haiku-4-5-20251001
+    quality: standard
+    cost_per_unit: 0.003     # cheap workhorse for stories
+    unit: call
+    enabled: false           # enable once ANTHROPIC_API_KEY is set
+
+  - id: anthropic-sonnet
+    modality: text
+    adapter: anthropic
+    model: claude-sonnet-4-5
+    quality: premium
+    cost_per_unit: 0.02
+    unit: call
+    enabled: false
+
   # ── IMAGE ──────────────────────────────────────────────────────────────────
   - id: mock-image
     modality: image
