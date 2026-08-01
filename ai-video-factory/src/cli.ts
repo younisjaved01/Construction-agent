@@ -8,6 +8,9 @@ import {generateStory} from './content/story.js';
 import {buildScenePrompts} from './content/prompts.js';
 import {CharacterManager, createCharacterRepo} from './content/characters.js';
 import {produce} from './generation/produce.js';
+import {readFile} from 'node:fs/promises';
+import {buildTimeline} from './editor/timeline.js';
+import {FfmpegRenderer} from './editor/render.js';
 
 const MODALITIES: Modality[] = ['text', 'image', 'video', 'voice', 'music'];
 
@@ -113,6 +116,18 @@ async function cmdProduce(topic: string, rest: string[]): Promise<void> {
   console.log(`  manifest   : ${result.manifestPath}\n`);
 }
 
+async function cmdEdit(manifestPath: string, rest: string[]): Promise<void> {
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  const timeline = await buildTimeline(manifest, {
+    defaultDuration: flag(rest, 'scene-seconds') ? Number(flag(rest, 'scene-seconds')) : undefined,
+  });
+  const slug = String(manifest.title ?? 'video').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const out = flag(rest, 'out') ?? `out/${slug || 'video'}.mp4`;
+  console.log(`rendering ${timeline.scenes.length} scenes → ${out} …`);
+  await new FfmpegRenderer().render(timeline, out);
+  console.log(`\n✅ rendered → ${out}  (${timeline.total.toFixed(1)}s)\n`);
+}
+
 async function cmdCharacter(rest: string[]): Promise<void> {
   const mgr = new CharacterManager(createCharacterRepo());
   const [action, name, description] = rest;
@@ -142,6 +157,10 @@ async function main(argv: string[]): Promise<void> {
     if (!arg) throw new Error('A topic is required.');
     return cmdProduce(arg, rest);
   }
+  if (cmd === 'edit') {
+    if (!arg) throw new Error('A manifest path is required.');
+    return cmdEdit(arg, rest);
+  }
   if (cmd === 'character') return cmdCharacter([arg, ...rest].filter(Boolean) as string[]);
 
   console.error(
@@ -149,7 +168,8 @@ async function main(argv: string[]): Promise<void> {
       '  factory <text|image|video|voice|music> "<prompt>" [--tier T] [--provider ID]\n' +
       '  factory story "<topic>" [--scenes N] [--niche X] [--character NAME]\n' +
       '  factory produce "<topic>" [--scenes N] [--character NAME] [--character-desc "…"]\n' +
-      '                  [--image-tier T] [--video-tier T] [--video] [--budget USD]\n' +
+      '                  [--image-tier T] [--video-tier T] [--video] [--voice] [--music] [--budget USD]\n' +
+      '  factory edit <manifest.json> [--out path.mp4] [--scene-seconds N]\n' +
       '  factory character add "<name>" "<description>" [--style S]\n' +
       '  factory character list',
   );
