@@ -96,6 +96,9 @@ async function cmdProduce(topic: string, rest: string[]): Promise<void> {
       makeMusic: rest.includes('--music'),
       mood: flag(rest, 'mood'),
       sfxTag: flag(rest, 'sfx'),
+      makeThumbnail: rest.includes('--thumbnail'),
+      thumbnailAspect: flag(rest, 'thumb-aspect') as 'vertical' | 'wide' | undefined,
+      makeMetadata: rest.includes('--metadata'),
       budgetUsd: flag(rest, 'budget') ? Number(flag(rest, 'budget')) : undefined,
     },
     buildDeps(rest),
@@ -112,6 +115,13 @@ async function cmdProduce(topic: string, rest: string[]): Promise<void> {
   }
   if (result.music) console.log(`  music : ${result.music.title} (${result.music.mood}) → ${result.music.uri}`);
   if (result.sfx) console.log(`  sfx   : ${result.sfx.title} → ${result.sfx.uri}`);
+  if (result.thumbnail) console.log(`  thumb : ${result.thumbnail.asset.uri}`);
+  if (result.metadata) {
+    console.log(`  meta  : ${result.metadata.title}`);
+    console.log(`          tags: ${result.metadata.tags.join(', ')}`);
+    if (result.metadata.platforms.youtube?.title) console.log(`          yt: ${result.metadata.platforms.youtube.title}`);
+    if (result.metadata.platforms.tiktok?.caption) console.log(`          tt: ${result.metadata.platforms.tiktok.caption}`);
+  }
   console.log(`\n  total cost : $${result.totalCostUsd.toFixed(4)}`);
   console.log(`  manifest   : ${result.manifestPath}\n`);
 }
@@ -168,7 +178,8 @@ async function main(argv: string[]): Promise<void> {
       '  factory <text|image|video|voice|music> "<prompt>" [--tier T] [--provider ID]\n' +
       '  factory story "<topic>" [--scenes N] [--niche X] [--character NAME]\n' +
       '  factory produce "<topic>" [--scenes N] [--character NAME] [--character-desc "…"]\n' +
-      '                  [--image-tier T] [--video-tier T] [--video] [--voice] [--music] [--budget USD]\n' +
+      '                  [--image-tier T] [--video-tier T] [--video] [--voice] [--music]\n' +
+      '                  [--thumbnail] [--thumb-aspect vertical|wide] [--metadata] [--budget USD]\n' +
       '  factory edit <manifest.json> [--out path.mp4] [--scene-seconds N]\n' +
       '  factory character add "<name>" "<description>" [--style S]\n' +
       '  factory character list',

@@ -6,9 +6,11 @@ router** that always picks the cheapest provider meeting the required quality �
 so you can start on pay-per-use APIs and migrate to a local GPU with a config
 change, never a rewrite.
 
-> **Status: Milestone 1 — Foundation.** The generation core (registry → router →
-> cache → store) runs today with an offline mock provider. Story/video/voice/
-> editor/posting modules land in later milestones.
+> **Status: Milestone 6 — Packaging.** The full pipeline runs offline end-to-end:
+> story → prompts → character → keyframes → clips → voice → music → **editor
+> (FFmpeg) → thumbnail + platform metadata**. Everything routes through the cost
+> router and content-addressed cache, so repeats are $0. Auto-posting/analytics
+> land in later milestones.
 
 ## Architecture (M1)
 
@@ -83,6 +85,21 @@ docker-compose.yml        self-hosted infra
 
 ## Roadmap
 
-M1 Foundation · M2 Story/Prompt/Character · M3 Image+Video generation ·
-M4 Voice+Music · M5 Editor (Remotion/FFmpeg) · M6 Thumbnails+metadata ·
-M7 Auto-posting · M8 Analytics+feedback · M9 Hardening.
+✅ M1 Foundation · ✅ M2 Story/Prompt/Character · ✅ M3 Image+Video generation ·
+✅ M4 Voice+Music · ✅ M5 Editor (FFmpeg) · ✅ M6 Thumbnails+metadata ·
+⬜ M7 Auto-posting · ⬜ M8 Analytics+feedback · ⬜ M9 Hardening.
+
+### M6 — Packaging
+
+```
+factory produce "topic" --thumbnail --metadata     # cover image + platform copy
+```
+
+- **Thumbnail Generator** (`src/packaging/thumbnail.ts`) — a bold, high-CTR,
+  text-free cover image through the same cheapest-sufficient image route; reuses
+  the character reference so the thumbnail matches the video's identity.
+  `--thumb-aspect vertical|wide` for Shorts/Reels vs YouTube.
+- **Metadata Generator** (`src/packaging/metadata.ts`) — validated, platform-ready
+  publishing copy (title, SEO description, tags, and native YouTube/TikTok/
+  Instagram captions with hashtags), ready for the M7 auto-poster. Cached per
+  story, so identical input costs $0.

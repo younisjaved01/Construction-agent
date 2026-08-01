@@ -8,6 +8,8 @@ import {buildScenePrompts} from '../content/prompts.js';
 import {CharacterManager, createCharacterRepo, type Character} from '../content/characters.js';
 import {VoiceManager, narrate} from '../audio/voice.js';
 import {MusicLibrary} from '../audio/music.js';
+import {generateThumbnail} from '../packaging/thumbnail.js';
+import {generateMetadata, type Metadata} from '../packaging/metadata.js';
 import {BudgetGuard} from './budget.js';
 
 export interface SceneOutput {
@@ -28,6 +30,8 @@ export interface ProduceResult {
   scenes: SceneOutput[];
   music?: {title: string; uri: string; mood: string};
   sfx?: {title: string; uri: string};
+  thumbnail?: {asset: AssetRef; prompt: string};
+  metadata?: Metadata;
   totalCostUsd: number;
   manifestPath: string;
 }
@@ -51,6 +55,10 @@ export interface ProduceOptions {
   makeMusic?: boolean;
   mood?: string;
   sfxTag?: string;
+  // packaging (Milestone 6)
+  makeThumbnail?: boolean;
+  thumbnailAspect?: 'vertical' | 'wide';
+  makeMetadata?: boolean;
   budgetUsd?: number;
 }
 
@@ -190,6 +198,42 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
     }
   }
 
+  // packaging: thumbnail + platform metadata (Milestone 6)
+  let thumbnail: ProduceResult['thumbnail'];
+  if (opts.makeThumbnail) {
+    const thumbReq = {
+      title: story.title,
+      subject: story.hook || story.title,
+      aspect: opts.thumbnailAspect ?? ('vertical' as const),
+      tier: imageTier,
+      providerId: imgAdapter.id,
+      reference: character?.refAssetUri,
+    };
+    guard.check((await estimate(
+      {modality: 'image', prompt: thumbReq.subject, tier: imageTier, providerId: imgAdapter.id},
+      deps,
+    )).costUsd);
+    const t = await generateThumbnail(thumbReq, deps);
+    guard.record(t.costUsd);
+    thumbnail = {asset: t.asset, prompt: t.prompt};
+    log.info('thumbnail.done', {uri: t.asset.uri, cost: t.costUsd});
+  }
+
+  let metadata: Metadata | undefined;
+  if (opts.makeMetadata) {
+    const metaReq = {
+      modality: 'text' as const,
+      prompt: story.title,
+      tier: 'standard' as QualityTier,
+      params: {kind: 'metadata', title: story.title},
+    };
+    const metaCost = (await estimate(metaReq, deps)).costUsd;
+    guard.check(metaCost);
+    metadata = await generateMetadata(story, deps, 'standard');
+    guard.record(metaCost);
+    log.info('metadata.done', {title: metadata.title, tags: metadata.tags.length});
+  }
+
   // 5) persist a manifest the editor (M5) will consume
   const slug = story.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
   const dir = process.env.PROJECTS_DIR ?? './data/projects';
@@ -202,6 +246,8 @@ export async function produce(opts: ProduceOptions, deps: PipelineDeps): Promise
     scenes,
     music,
     sfx,
+    thumbnail,
+    metadata,
     totalCostUsd: guard.spent,
     manifestPath,
   };

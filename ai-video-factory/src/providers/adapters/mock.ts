@@ -16,7 +16,9 @@ class MockAdapter implements ProviderAdapter {
   }
 
   async generate(input: GenerateInput): Promise<GeneratedBytes> {
-    if (this.config.modality === 'text') return this.mockStory(input);
+    if (this.config.modality === 'text') {
+      return input.params.kind === 'metadata' ? this.mockMetadata(input) : this.mockStory(input);
+    }
     if (this.config.modality === 'image') return this.mockImage(input);
     // video / voice / music placeholder — bytes flow through the pipeline so
     // caching, budgeting and manifests all work offline (not a playable file).
@@ -40,6 +42,22 @@ class MockAdapter implements ProviderAdapter {
       cta: 'Follow for more.',
     };
     return {bytes: new TextEncoder().encode(JSON.stringify(story)), contentType: 'application/json'};
+  }
+
+  /** Platform-ready metadata JSON derived from the title (see packaging/metadata.ts). */
+  private mockMetadata(input: GenerateInput): GeneratedBytes {
+    const title = String(input.params.title ?? input.prompt).replace(/\s+/g, ' ').trim().slice(0, 90) || 'Untitled';
+    const meta = {
+      title,
+      description: `${title} — a short you won't want to miss. Watch till the end.`,
+      tags: ['shorts', 'story', 'viral', 'fyp', 'foryou'],
+      platforms: {
+        youtube: {title: `${title} #Shorts`, description: `${title}\n\nSubscribe for more.`},
+        tiktok: {caption: `${title} #fyp #foryou #story`},
+        instagram: {caption: `${title} ✨ #reels #explore #story`},
+      },
+    };
+    return {bytes: new TextEncoder().encode(JSON.stringify(meta)), contentType: 'application/json'};
   }
 
   private mockImage(input: GenerateInput): GeneratedBytes {
