@@ -26,6 +26,8 @@ const ADAPTER_LOADERS: Record<string, () => Promise<AdapterModule>> = {
   mock: () => import('./adapters/mock.js'),
   fal: () => import('./adapters/fal.js'),
   anthropic: () => import('./adapters/anthropic.js'),
+  gemini: () => import('./adapters/gemini.js'),
+  openai: () => import('./adapters/openai.js'),
   elevenlabs: () => import('./adapters/elevenlabs.js'),
   // comfy, vibevoice, minimax … land in later milestones
 };

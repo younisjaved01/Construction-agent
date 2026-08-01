@@ -1,5 +1,8 @@
 import {fileURLToPath} from 'node:url';
+import {loadEnv} from './core/env.js';
 import {QUALITY_TIERS, type Modality, type QualityTier} from './core/types.js';
+
+loadEnv(); // pull .env (API keys) into process.env before anything reads them
 import {createAssetStore} from './cache/assetStore.js';
 import {ProviderRegistry} from './providers/registry.js';
 import {CostRouter} from './providers/router.js';
