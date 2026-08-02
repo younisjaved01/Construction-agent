@@ -1,3 +1,4 @@
+import {readFile} from 'node:fs/promises';
 import type {GeneratedBytes, GenerateInput, ProviderAdapter, ProviderConfig} from '../types.js';
 
 /**
@@ -27,7 +28,9 @@ class FalAdapter implements ProviderAdapter {
     if (!key) throw new Error('FAL_KEY is not set (enable it in .env for fal providers).');
 
     // Image-to-video / image edits pass the first reference as image_url.
-    const imageUrl = input.references?.[0];
+    // Local files are inlined as data URIs so fal can actually fetch them
+    // (no public hosting needed); http(s)/data URIs pass through unchanged.
+    const imageUrl = await toImageUrl(input.references?.[0]);
     const body: Record<string, unknown> = {
       prompt: input.prompt,
       ...this.config.params,
@@ -54,6 +57,28 @@ class FalAdapter implements ProviderAdapter {
       fileRes.headers.get('content-type') ?? guessContentType(this.config.modality);
     return {bytes, contentType};
   }
+}
+
+/** Turn a reference URI into something fal can fetch: http(s)/data pass through;
+ *  local files are read and inlined as a base64 data URI (no hosting required). */
+async function toImageUrl(ref?: string): Promise<string | undefined> {
+  if (!ref) return undefined;
+  if (/^https?:\/\//.test(ref) || ref.startsWith('data:')) return ref;
+  if (ref.startsWith('local://')) {
+    const path = ref.slice('local://'.length);
+    const buf = await readFile(path);
+    return `data:${mimeFromPath(path)};base64,${buf.toString('base64')}`;
+  }
+  return undefined; // unknown scheme — skip rather than send something fal can't use
+}
+
+function mimeFromPath(path: string): string {
+  const ext = path.slice(path.lastIndexOf('.') + 1).toLowerCase();
+  if (ext === 'png') return 'image/png';
+  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg';
+  if (ext === 'webp') return 'image/webp';
+  if (ext === 'svg') return 'image/svg+xml';
+  return 'application/octet-stream';
 }
 
 interface FalFile {

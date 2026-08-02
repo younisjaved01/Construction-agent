@@ -18,9 +18,14 @@ class OpenAiAdapter implements ProviderAdapter {
   }
 
   async generate(input: GenerateInput): Promise<GeneratedBytes> {
-    const key = process.env.OPENAI_API_KEY;
-    if (!key) throw new Error('OPENAI_API_KEY is not set (add it to .env).');
-    const base = process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1';
+    // Each provider may name its own key/base-URL env (config.params), so Groq,
+    // Cerebras, OpenRouter, a local server … coexist without env-var collisions.
+    const keyEnv = String(this.config.params?.api_key_env ?? 'OPENAI_API_KEY');
+    const key = process.env[keyEnv];
+    if (!key) throw new Error(`${keyEnv} is not set (add it to .env).`);
+    const base = String(
+      this.config.params?.base_url ?? process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1',
+    );
 
     const messages: {role: string; content: string}[] = [];
     if (input.params.system) messages.push({role: 'system', content: String(input.params.system)});

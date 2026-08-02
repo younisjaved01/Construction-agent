@@ -34,6 +34,18 @@ providers:
     unit: call
     enabled: false            # enable once GEMINI_API_KEY is set
 
+  - id: groq-llama
+    modality: text
+    adapter: openai           # Groq speaks the OpenAI API → same adapter, no new code
+    model: llama-3.3-70b-versatile
+    quality: standard
+    cost_per_unit: 0          # free tier, no region lock; great Gemini fallback
+    unit: call
+    enabled: false            # enable once GROQ_API_KEY is set
+    params:
+      base_url: https://api.groq.com/openai/v1
+      api_key_env: GROQ_API_KEY
+
   - id: openai-gpt4o-mini
     modality: text
     adapter: openai
